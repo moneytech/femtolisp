@@ -292,5 +292,16 @@
 
 (assert (equal? 1.0 (* 1.0 1))) ; tests that * no longer does inexact->exact
 
+(define (with-output-to-string nada thunk)
+  (let ((b (buffer)))
+    (with-output-to b (thunk))
+    (io.tostring! b)))
+
+(let ((c #\a))
+  (assert (equal? (with-output-to-string #f (lambda () (print (list c c))))
+                  "(#\\a #\\a)")))
+
+(assert-fail (eval '(set! (car (cons 1 2)) 3)))
+
 (princ "all tests pass\n")
 #t
